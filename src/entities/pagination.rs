@@ -12,6 +12,11 @@ pub struct Pagination {
     pub end: usize,
 }
 
+/// Extract query parameters from the `/endpoint` route
+/// # Example query
+/// GET requests to this route can have a pagination attached so we just
+/// return the data we need
+/// `/endpoint?start=1&end=10`
 pub fn extract_pagination(params: HashMap<String, String>) -> Result<Pagination, Error> {
     // Could be improved in the future
     if params.contains_key("start") && params.contains_key("end") {
