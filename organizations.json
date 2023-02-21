@@ -5,7 +5,6 @@
     "description": "How does this work?",
     "utc_created": "2014-11-28T12:45:59.324310806Z",
     "moderators": ["UID001"],
-    "members": ["UID001"],
-    "courses": null
+    "members": ["UID001"]
   }
 }

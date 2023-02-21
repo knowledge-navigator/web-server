@@ -1,4 +1,4 @@
-use super::{knowledge_nav::KnowledgeNavId, user::UserId};
+use super::{user::UserId};
 use chrono::{DateTime, Utc}; // time conversions for local take place on frontend
 use serde::{Deserialize, Serialize};
 
@@ -18,7 +18,7 @@ pub struct Organization {
     pub utc_created: DateTime<Utc>,
     pub moderators: Vec<UserId>, // only UserType::Teacher
     pub members: Vec<UserId>,
-    pub knowledge_nav: Option<Vec<KnowledgeNavId>>, // a knowledge navigator (e.g. Knowledge Navigator Y10)
+    // pub knowledge_nav: Option<Vec<KnowledgeNavId>>, // a knowledge navigator (e.g. Knowledge Navigator Y10)
 }
 
 #[derive(Deserialize, Serialize, Debug, Clone, PartialEq, Eq, Hash)]

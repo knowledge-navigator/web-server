@@ -8,7 +8,7 @@ use super::{user::UserId, single_chunk::SingleId};
 pub struct Response {
     pub id: ResponseId,
     pub info_chunk_id: SingleId,
-    pub student: UserId,
+    pub student_id: UserId,
     pub response: ResponseType,
     pub utc_answered: DateTime<Utc>,
 }
