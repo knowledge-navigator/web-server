@@ -1,6 +1,7 @@
-// a knowledge navigator info section created and managegd by teacher accounts and part of a course.rs
+// a knowledge navigator info section created and managed by teacher accounts and part of a course.rs
 use serde::{Deserialize, Serialize};
 
+///
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct InfoChunk {
     pub id: ChunkId,

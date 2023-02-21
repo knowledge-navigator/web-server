@@ -4,3 +4,6 @@ pub mod pagination;
 pub mod info_chunks;
 pub mod organization;
 pub mod class;
+pub mod schedule;
+pub mod subject;
+pub mod day;
