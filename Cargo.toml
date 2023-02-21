@@ -10,4 +10,5 @@ tokio = { version = "1.2", features = ["full"] }
 warp = "0.3"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-handle-errors = { path = "handle-errors" } # local imports omit version number
+handle-errors = { path = "handle-errors" }         # local imports omit version number
+chrono = { version = "0.4.23", features = ["serde"]}
