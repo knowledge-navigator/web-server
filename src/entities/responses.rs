@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
-use super::{user::UserId, single_chunk::SingleId};
+use super::{single_chunk::SingleId, user::UserId};
 
 /// Track info on Student review responses.
 #[derive(Serialize, Deserialize, Debug, Clone)]

@@ -20,5 +20,5 @@ pub enum WeekDay {
     Thursday,
     Friday,
     Saturday,
-    Sunday
+    Sunday,
 }

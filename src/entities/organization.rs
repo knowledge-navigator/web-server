@@ -1,4 +1,4 @@
-use super::{user::UserId};
+use super::user::UserId;
 use chrono::{DateTime, Utc}; // time conversions for local take place on frontend
 use serde::{Deserialize, Serialize};
 

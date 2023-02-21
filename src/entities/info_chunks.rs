@@ -11,11 +11,9 @@ pub struct InfoChunk {
     pub title: String,
     /// custom instructions for this info_chunk
     pub instructions: Option<String>,
-
     // /// collection of information part of this info chunk
     // pub chunks: Vec<SingleId>,
 }
 
 #[derive(Deserialize, Serialize, Debug, Clone, PartialEq, Eq, Hash)]
 pub struct ChunkId(pub String);
-

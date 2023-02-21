@@ -16,7 +16,8 @@ impl Store {
         }
     }
 
-    fn init() -> HashMap<OrganizationId, Organization> { // TODO: Impl. real database
+    fn init() -> HashMap<OrganizationId, Organization> {
+        // TODO: Impl. real database
         let file = include_str!("../organizations.json");
         serde_json::from_str(file).expect("can't read organizations.json")
     }

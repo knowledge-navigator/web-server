@@ -10,8 +10,8 @@ pub struct Class {
     pub form: String,
     pub utc_created: DateTime<Utc>,
     pub utc_modified: DateTime<Utc>,
-    pub students: Vec<UserId>,          // only UserType::Student
-    pub teachers: Vec<UserId>,        // only UserType::Teacher
+    pub students: Vec<UserId>, // only UserType::Student
+    pub teachers: Vec<UserId>, // only UserType::Teacher
     /// `courses` that belong to said `class`
     pub courses: Option<Vec<CourseId>>, // a knowledge navigator (e.g. Knowledge Navigator Y10)
 }

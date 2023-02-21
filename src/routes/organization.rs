@@ -36,19 +36,30 @@ pub async fn update_organization(
         None => return Err(warp::reject::custom(Error::OrganisationNotFound)),
     }
 
-    Ok(warp::reply::with_status("Organization updated", StatusCode::OK))
+    Ok(warp::reply::with_status(
+        "Organization updated",
+        StatusCode::OK,
+    ))
 }
 
 pub async fn delete_organization(
     id: String,
     store: Store,
 ) -> Result<impl warp::Reply, warp::Rejection> {
-    match store.organizations.write().await.remove(&OrganizationId(id)) {
+    match store
+        .organizations
+        .write()
+        .await
+        .remove(&OrganizationId(id))
+    {
         Some(_) => (),
         None => return Err(warp::reject::custom(Error::OrganisationNotFound)),
     }
 
-    Ok(warp::reply::with_status("Organization deleted", StatusCode::OK))
+    Ok(warp::reply::with_status(
+        "Organization deleted",
+        StatusCode::OK,
+    ))
 }
 
 pub async fn add_organizations(
@@ -61,5 +72,8 @@ pub async fn add_organizations(
         .await
         .insert(organization.clone().id, organization);
 
-    Ok(warp::reply::with_status("Organization added", StatusCode::OK))
+    Ok(warp::reply::with_status(
+        "Organization added",
+        StatusCode::OK,
+    ))
 }

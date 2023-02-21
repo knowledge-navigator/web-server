@@ -1,5 +1,5 @@
+use super::day::DayId;
 use serde::{Deserialize, Serialize};
-use super::{day::DayId};
 
 /// schedule for a knowledge navigator `Course` created and managed by teacher accounts
 #[derive(Serialize, Deserialize, Debug, Clone)]
