@@ -22,7 +22,7 @@ async fn main() {
         .and(warp::path::end())
         .and(warp::query())
         .and(store_filter.clone())
-        .and_then(routes::organization::get_organization);
+        .and_then(routes::organization::get_organizations);
 
     let update_organization = warp::put()
         .and(warp::path("organizations"))
@@ -44,7 +44,7 @@ async fn main() {
         .and(warp::path::end())
         .and(store_filter.clone())
         .and(warp::body::json())
-        .and_then(routes::organization::add_organization);
+        .and_then(routes::organization::add_organizations);
 
     let routes = get_organization
         .or(update_organization)

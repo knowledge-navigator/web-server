@@ -6,7 +6,7 @@ use crate::entities::pagination::extract_pagination;
 use crate::store::Store;
 use handle_errors::Error;
 
-pub async fn get_organization(
+pub async fn get_organizations(
     params: HashMap<String, String>,
     store: Store,
 ) -> Result<impl warp::Reply, warp::Rejection> {
@@ -51,7 +51,7 @@ pub async fn delete_organization(
     Ok(warp::reply::with_status("Organization deleted", StatusCode::OK))
 }
 
-pub async fn add_organization(
+pub async fn add_organizations(
     store: Store,
     organization: Organization,
 ) -> Result<impl warp::Reply, warp::Rejection> {
