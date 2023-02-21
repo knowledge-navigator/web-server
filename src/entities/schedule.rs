@@ -1,11 +1,11 @@
 use serde::{Deserialize, Serialize};
-use super::{course::CourseId, day::DayId};
+use super::{day::DayId};
 
 /// schedule for a knowledge navigator `Course` created and managed by teacher accounts
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Schedule {
     pub id: ScheduleId,
-    pub course_id: CourseId,
+    pub cycle: u8,
     pub weeks: Vec<DayId>,
 }
 
