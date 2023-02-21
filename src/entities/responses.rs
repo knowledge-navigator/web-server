@@ -1,23 +1,24 @@
+use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
-use super::{info_chunks::ChunkId, user::UserId};
+use super::{user::UserId, single_chunk::SingleId};
 
-///
+/// Track info on Student review responses.
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Response {
     pub id: ResponseId,
-    pub info_chunk_id: ChunkId,
+    pub info_chunk_id: SingleId,
     pub student: UserId,
-    pub response: ResponseType
+    pub response: ResponseType,
+    pub utc_answered: DateTime<Utc>,
 }
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
 pub enum ResponseType {
     Green,
     Amber,
-    Red
+    Red,
 }
 
 #[derive(Deserialize, Serialize, Debug, Clone, PartialEq, Eq, Hash)]
 pub struct ResponseId(pub String);
-

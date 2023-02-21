@@ -7,10 +7,12 @@ use serde::{Deserialize, Serialize};
 pub struct Class {
     pub id: ClassId,
     pub name: String,
-    pub description: Option<String>,
+    pub form: String,
     pub utc_created: DateTime<Utc>,
+    pub utc_modified: DateTime<Utc>,
     pub students: Vec<UserId>,          // only UserType::Student
-    pub moderators: Vec<UserId>,        // only UserType::Teacher
+    pub teachers: Vec<UserId>,        // only UserType::Teacher
+    /// `courses` that belong to said `class`
     pub courses: Option<Vec<CourseId>>, // a knowledge navigator (e.g. Knowledge Navigator Y10)
 }
 

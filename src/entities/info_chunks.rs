@@ -1,14 +1,17 @@
 // a knowledge navigator info section created and managed by teacher accounts and part of a course.rs
 use serde::{Deserialize, Serialize};
 
-///
+use super::single_chunk::SingleId;
+
+/// Sections of questions, info or translations that `Student` must revise.
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct InfoChunk {
     pub id: ChunkId,
     pub title: String,
-    pub instructions: Option<String>, // custom instructions for this info_chunk
-    pub content: String,
-    // TODO: Implement saving images and referencing them here.
+    /// custom instructions for this info_chunk
+    pub instructions: Option<String>,
+    /// collection of information part of this info chunk
+    pub chunks: Vec<SingleId>,
 }
 
 #[derive(Deserialize, Serialize, Debug, Clone, PartialEq, Eq, Hash)]

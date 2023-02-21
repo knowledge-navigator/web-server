@@ -11,8 +11,10 @@ pub struct Course {
     pub description: Option<String>,
     pub utc_created: DateTime<Utc>,
     pub utc_last_updated: DateTime<Utc>,
+    /// `Teacher`s responsible for the course
     pub moderators: Vec<UserId>, // only UserType::Teacher
-    pub info_chunks: Option<Vec<ChunkId>>, // 
+    /// Questions, info sections and translations that belong to this course
+    pub info_chunks: Option<Vec<ChunkId>>
 }
 
 #[derive(Deserialize, Serialize, Debug, Clone, PartialEq, Eq, Hash)]
