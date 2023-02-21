@@ -9,7 +9,7 @@ use warp::{
 pub enum Error {
     ParseError(std::num::ParseIntError),
     MissingParameters,
-    QuestionNotFound,
+    OrganisationNotFound,
 }
 
 impl std::fmt::Display for Error {
@@ -17,7 +17,7 @@ impl std::fmt::Display for Error {
         match *self {
             Error::ParseError(ref err) => write!(f, "Cannot parse parameter: {}", err),
             Error::MissingParameters => write!(f, "Missing parameter"),
-            Error::QuestionNotFound => write!(f, "Question not found"),
+            Error::OrganisationNotFound => write!(f, "Organisation not found"),
         }
     }
 }
