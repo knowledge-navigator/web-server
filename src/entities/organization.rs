@@ -15,6 +15,7 @@ pub struct Organization {
     pub description: Option<String>,
     pub utc_created: DateTime<Utc>,
     pub moderators: Vec<UserId>,        // only UserType::Teacher
+    pub members: Vec<UserId>,           // UserType
     pub courses: Option<Vec<CourseId>>, // a knowledge navigator (e.g. Knowledge Navigator Y10)
 }
 

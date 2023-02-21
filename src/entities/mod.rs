@@ -7,3 +7,4 @@ pub mod class;
 pub mod schedule;
 pub mod subject;
 pub mod day;
+pub mod knowledge_nav;
