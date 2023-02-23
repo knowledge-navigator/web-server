@@ -12,6 +12,7 @@ pub enum Error {
     ParseError(std::num::ParseIntError),
     MissingParameters,
     OrganisationNotFound,
+    InvalidParameters,
 }
 
 /// Returns the message written to console.
@@ -21,6 +22,7 @@ impl std::fmt::Display for Error {
             Error::ParseError(ref err) => write!(f, "Cannot parse parameter: {}", err),
             Error::MissingParameters => write!(f, "Missing parameter"),
             Error::OrganisationNotFound => write!(f, "Organisation not found"),
+            Error::InvalidParameters => write!(f, "Parameters are invalid"),
         }
     }
 }

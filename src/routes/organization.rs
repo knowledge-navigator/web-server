@@ -13,8 +13,12 @@ pub async fn get_organizations(
     if !params.is_empty() {
         let pagination = extract_pagination(params)?;
         let res: Vec<Organization> = store.organizations.read().await.values().cloned().collect();
-        let res = &res[pagination.start..pagination.end];
-        Ok(warp::reply::json(&res))
+        if (pagination.end > res.len()) || (pagination.start > pagination.end) {
+            return Err(warp::reject::custom(Error::InvalidParameters));
+        } else {
+            let res = &res[pagination.start..pagination.end];
+            Ok(warp::reply::json(&res))
+        }
     } else {
         let res: Vec<Organization> = store.organizations.read().await.values().cloned().collect();
         Ok(warp::reply::json(&res))
