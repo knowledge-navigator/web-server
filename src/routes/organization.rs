@@ -10,17 +10,18 @@ pub async fn get_organizations(
     params: HashMap<String, String>,
     store: Store,
 ) -> Result<impl warp::Reply, warp::Rejection> {
-    if !params.is_empty() {
-        let pagination = extract_pagination(params)?;
+    let res: Vec<Organization> = store.organizations.read().await.values().cloned().collect();
+
+    if params.is_empty() {
         let res: Vec<Organization> = store.organizations.read().await.values().cloned().collect();
-        if (pagination.end > res.len()) || (pagination.start > pagination.end) {
-            return Err(warp::reject::custom(Error::InvalidParameters));
-        } else {
-            let res = &res[pagination.start..pagination.end];
-            Ok(warp::reply::json(&res))
-        }
+        return Ok(warp::reply::json(&res));
+    }
+
+    let pagination = extract_pagination(params)?;
+    if (pagination.end > res.len()) || (pagination.start > pagination.end) {
+        Err(warp::reject::custom(Error::InvalidParameters))
     } else {
-        let res: Vec<Organization> = store.organizations.read().await.values().cloned().collect();
+        let res = &res[pagination.start..pagination.end];
         Ok(warp::reply::json(&res))
     }
 }

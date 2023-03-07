@@ -9,6 +9,25 @@ mod store;
 
 #[tokio::main]
 async fn main() {
+    log4rs::init_file("log4rs.yaml", Default::default()).unwrap();
+
+    log::error!("An error was thrown.");
+    log::info!("Info logged to console.");
+    log::warn!("A warning was thrown.");
+
+    let log = warp::log::custom(|info| {
+        // stderr used for logging
+        eprintln!(
+            "{} {} {} {:?} from {} with {:?}",
+            info.method(),
+            info.path(),
+            info.status(),
+            info.elapsed(),
+            info.remote_addr().unwrap(),
+            info.request_headers()
+        );
+    });
+
     let store = store::Store::new();
     let store_filter = warp::any().map(move || store.clone());
 
@@ -51,6 +70,7 @@ async fn main() {
         .or(add_organization)
         .or(delete_organization)
         .with(cors)
+        .with(log)
         .recover(return_error);
 
     warp::serve(routes).run(([127, 0, 0, 1], 3030)).await;
