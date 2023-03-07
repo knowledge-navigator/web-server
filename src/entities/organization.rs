@@ -10,16 +10,25 @@ An `Organization` can be created any `Teacher`, who is automatically also the mo
 Moderator teachers can manipulate courses and members of the `Organization` as well as alleviate or remove any
 teacher to and from moderator status.
 */
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, Decode)]
 pub struct Organization {
     pub id: OrganizationId,
     pub name: String,
     pub description: Option<String>,
     pub utc_created: DateTime<Utc>,
-    pub moderators: Vec<UserId>, // only UserType::Teacher
-    pub members: Vec<UserId>,
+    pub moderators: Option<Vec<UserId>>, // only UserType::Teacher
+    pub members: Option<Vec<UserId>>,
     // pub knowledge_nav: Option<Vec<KnowledgeNavId>>, // a knowledge navigator (e.g. Knowledge Navigator Y10)
 }
 
 #[derive(Deserialize, Serialize, Debug, Clone, PartialEq, Eq, Hash)]
 pub struct OrganizationId(pub i32);
+
+#[derive(Deserialize, Serialize, Debug, Clone)]
+pub struct NewOrganization {
+    pub name: String,
+    pub description: Option<String>,
+    pub utc_created: Option<DateTime<Utc>>,
+    pub moderators: Option<Vec<UserId>>, // only UserType::Teacher
+    pub members: Option<Vec<UserId>>,
+}
