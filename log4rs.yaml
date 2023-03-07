@@ -1,14 +1,17 @@
 refresh_rate: 30 seconds # config change during production refresh
 appenders: # set outputs
- stdout:
-   kind: console
- file:
-   kind: file
-   path: "stderr.log"
-   encoder:
-     pattern: "{d} - {m}{n}"
+  stdout:
+    kind: console
+encoder:
+kind: json
+  file:
+    kind: file
+    path: "stderr.log"
+encoder:
+kind: json
+ 
 root:
- level: debug # log level (env var)
- appenders: # what we wish to log to
-   - stdout
-   - file
+  level: info # log level (env var)
+  appenders: # what we wish to log to
+    - stdout
+    - file
