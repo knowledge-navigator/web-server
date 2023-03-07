@@ -12,10 +12,7 @@ pub async fn get_organizations(
 ) -> Result<impl warp::Reply, warp::Rejection> {
     let res: Vec<Organization> = store.organizations.read().await.values().cloned().collect();
 
-    if params.is_empty() {
-        let res: Vec<Organization> = store.organizations.read().await.values().cloned().collect();
-        return Ok(warp::reply::json(&res));
-    }
+    if params.is_empty() { return Ok(warp::reply::json(&res)) }
 
     let pagination = extract_pagination(params)?;
     if (pagination.end > res.len()) || (pagination.start > pagination.end) {
