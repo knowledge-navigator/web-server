@@ -1,21 +1,31 @@
-use std::collections::HashMap;
-use warp::http::StatusCode;
-
 use crate::entities::organization::{Organization, OrganizationId};
 use crate::entities::pagination::extract_pagination;
 use crate::store::Store;
 use handle_errors::Error;
+use std::collections::HashMap;
+use tracing::{info, warn, instrument};
+use warp::http::StatusCode;
 
+#[instrument]
 pub async fn get_organizations(
     params: HashMap<String, String>,
     store: Store,
 ) -> Result<impl warp::Reply, warp::Rejection> {
+    info!("Start querying organizations");
     let res: Vec<Organization> = store.organizations.read().await.values().cloned().collect();
 
-    if params.is_empty() { return Ok(warp::reply::json(&res)) }
+    if params.is_empty() {
+        info!(pagination = false);
+        return Ok(warp::reply::json(&res));
+    }
 
     let pagination = extract_pagination(params)?;
+    info!("Pagination set {:?}", &pagination);
     if (pagination.end > res.len()) || (pagination.start > pagination.end) {
+        warn!(
+            "Invalid pagination. See organization length: {}",
+            &res.len()
+        );
         Err(warp::reject::custom(Error::InvalidParameters))
     } else {
         let res = &res[pagination.start..pagination.end];

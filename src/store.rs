@@ -4,7 +4,7 @@ use tokio::sync::RwLock;
 
 use crate::entities::organization::{Organization, OrganizationId};
 
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct Store {
     pub organizations: Arc<RwLock<HashMap<OrganizationId, Organization>>>,
 }
