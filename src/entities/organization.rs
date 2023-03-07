@@ -1,5 +1,4 @@
-use super::user::UserId;
-use chrono::{DateTime, Utc}; // time conversions for local take place on frontend
+// time conversions for local take place on frontend
 use serde::{Deserialize, Serialize};
 
 /**
@@ -10,14 +9,13 @@ An `Organization` can be created any `Teacher`, who is automatically also the mo
 Moderator teachers can manipulate courses and members of the `Organization` as well as alleviate or remove any
 teacher to and from moderator status.
 */
-#[derive(Serialize, Deserialize, Debug, Clone, Decode)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Organization {
     pub id: OrganizationId,
     pub name: String,
     pub description: Option<String>,
-    pub utc_created: DateTime<Utc>,
-    pub moderators: Option<Vec<UserId>>, // only UserType::Teacher
-    pub members: Option<Vec<UserId>>,
+    pub moderators: Option<Vec<i32>>, // only UserType::Teacher
+    pub members: Option<Vec<i32>>,
     // pub knowledge_nav: Option<Vec<KnowledgeNavId>>, // a knowledge navigator (e.g. Knowledge Navigator Y10)
 }
 
@@ -28,7 +26,6 @@ pub struct OrganizationId(pub i32);
 pub struct NewOrganization {
     pub name: String,
     pub description: Option<String>,
-    pub utc_created: Option<DateTime<Utc>>,
-    pub moderators: Option<Vec<UserId>>, // only UserType::Teacher
-    pub members: Option<Vec<UserId>>,
+    pub moderators: Option<Vec<i32>>, // only UserType::Teacher
+    pub members: Option<Vec<i32>>,
 }

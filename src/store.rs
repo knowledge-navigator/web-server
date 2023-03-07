@@ -1,7 +1,7 @@
+use crate::entities::organization::{NewOrganization, Organization, OrganizationId};
+use handle_errors::Error;
 use sqlx::postgres::{PgPool, PgPoolOptions, PgRow};
 use sqlx::Row;
-use handle_errors::Error;
-use crate::entities::organization::{Organization, OrganizationId};
 
 #[derive(Debug, Clone)]
 pub struct Store {
@@ -36,96 +36,94 @@ impl Store {
                 id: OrganizationId(row.get("id")),
                 name: row.get("name"),
                 description: row.get("description"),
-                utc_created: row.get("utc_created"),
                 moderators: row.get("moderators"),
                 members: row.get("members"),
             })
             .fetch_all(&self.connection)
             .await
         {
-            Ok(Organizations) => Ok(Organizations),
+            Ok(organizations) => Ok(organizations),
             Err(e) => {
                 tracing::event!(tracing::Level::ERROR, "{:?}", e);
                 Err(Error::DatabaseQueryError)
             }
         }
     }
-    // pub async fn add_Organization(
-    //     &self,
-    //     new_Organization: NewOrganization,
-    // ) -> Result<Organization, Error> {
-    //     match sqlx::query(
-    //         "INSERT INTO Organizations (title, content, tags)
-    //              VALUES ($1, $2, $3)
-    //              RETURNING id, title, content, tags",
-    //     )
-    //     .bind(new_Organization.title)
-    //     .bind(new_Organization.content)
-    //     .bind(new_Organization.tags)
-    //     .map(|row: PgRow| Organization {
-    //             id: OrganizationId(row.get("id")),
-    //             name: row.get("name"),
-    //             description: row.get("description"),
-    //             utc_created: row.get("utc_created"),
-    //             moderators: row.get("moderators"),
-    //             members: row.get("members"),
-    //     })
-    //     .fetch_one(&self.connection)
-    //     .await
-    //     {
-    //         Ok(Organization) => Ok(Organization),
-    //         Err(e) => {
-    //             tracing::event!(tracing::Level::ERROR, "{:?}", e);
-    //             Err(Error::DatabaseQueryError)
-    //         }
-    //     }
-    // }
+    pub async fn add_organization(
+        &self,
+        new_organization: NewOrganization,
+    ) -> Result<Organization, Error> {
+        match sqlx::query(
+            "INSERT INTO organizations (name, description, moderators, members)
+                 VALUES ($1, $2, $3, $4)
+                 RETURNING id, name, description, moderators, members",
+        )
+        .bind(new_organization.name)
+        .bind(new_organization.description)
+        .bind(new_organization.moderators)
+        .bind(new_organization.members)
+        .map(|row: PgRow| Organization {
+            id: OrganizationId(row.get("id")),
+            name: row.get("name"),
+            description: row.get("description"),
+            moderators: row.get("moderators"),
+            members: row.get("members"),
+        })
+        .fetch_one(&self.connection)
+        .await
+        {
+            Ok(organizations) => Ok(organizations),
+            Err(e) => {
+                tracing::event!(tracing::Level::ERROR, "{:?}", e);
+                Err(Error::DatabaseQueryError)
+            }
+        }
+    }
 
-    // pub async fn update_Organization(
-    //     &self,
-    //     Organization: Organization,
-    //     Organization_id: i32,
-    // ) -> Result<Organization, Error> {
-    //     match sqlx::query(
-    //         "UPDATE Organizations SET title = $1, content = $2, tags = $3
-    //     WHERE id = $4
-    //     RETURNING id, title, content, tags",
-    //     )
-    //     .bind(Organization.title)
-    //     .bind(Organization.content)
-    //     .bind(Organization.tags)
-    //     .bind(Organization_id)
-    //     .map(|row: PgRow| Organization {
-    //         id: OrganizationId(row.get("id")),
-    //         title: row.get("title"),
-    //         content: row.get("content"),
-    //         tags: row.get("tags"),
-    //     })
-    //     .fetch_one(&self.connection)
-    //     .await
-    //     {
-    //         Ok(Organization) => Ok(Organization),
-    //         Err(e) => {
-    //             tracing::event!(tracing::Level::ERROR, "{:?}", e);
-    //             Err(Error::DatabaseQueryError)
-    //         }
-    //     }
-    // }
+    pub async fn update_organization(
+        &self,
+        organization: Organization,
+        organization_id: i32,
+    ) -> Result<Organization, Error> {
+        match sqlx::query(
+            "UPDATE organizations SET name = $1, description = $2, moderators = $3, members = $4
+        WHERE id = $5
+        RETURNING id, name, description, moderators, members",
+        )
+        .bind(organization.name)
+        .bind(organization.description)
+        .bind(organization.moderators)
+        .bind(organization.members)
+        .bind(organization_id)
+        .map(|row: PgRow| Organization {
+            id: OrganizationId(row.get("id")),
+            name: row.get("name"),
+            description: row.get("description"),
+            moderators: row.get("moderators"),
+            members: row.get("members"),
+        })
+        .fetch_one(&self.connection)
+        .await
+        {
+            Ok(organizations) => Ok(organizations),
+            Err(e) => {
+                tracing::event!(tracing::Level::ERROR, "{:?}", e);
+                Err(Error::DatabaseQueryError)
+            }
+        }
+    }
 
-    // pub async fn delete_Organization(
-    //     &self,
-    //     Organization_id: i32,
-    // ) -> Result<bool, Error> {
-    //     match sqlx::query("DELETE FROM Organizations WHERE id = $1")
-    //         .bind(Organization_id)
-    //         .execute(&self.connection)
-    //         .await
-    //     {
-    //         Ok(_) => Ok(true),
-    //         Err(e) => {
-    //             tracing::event!(tracing::Level::ERROR, "{:?}", e);
-    //             Err(Error::DatabaseQueryError)
-    //         }
-    //     }
-    // }
+    pub async fn delete_organization(&self, organization_id: i32) -> Result<bool, Error> {
+        match sqlx::query("DELETE FROM organizations WHERE id = $1")
+            .bind(organization_id)
+            .execute(&self.connection)
+            .await
+        {
+            Ok(_) => Ok(true),
+            Err(e) => {
+                tracing::event!(tracing::Level::ERROR, "{:?}", e);
+                Err(Error::DatabaseQueryError)
+            }
+        }
+    }
 }

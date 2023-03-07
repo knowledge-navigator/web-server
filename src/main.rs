@@ -13,7 +13,7 @@ async fn main() {
     let log_filter = std::env::var("RUST_LOG")
         .unwrap_or_else(|_| "knowledge_nav_web_server_api=info,warp=error".to_owned());
 
-    let store = store::Store::new("postgres://localhost:5432/webserver").await;
+    let store = store::Store::new("postgres://dev:7727@localhost:5432/webserver").await;
     let store_filter = warp::any().map(move || store.clone());
 
     tracing_subscriber::fmt()
@@ -65,7 +65,7 @@ async fn main() {
         .and(warp::path::end())
         .and(store_filter.clone())
         .and(warp::body::json())
-        .and_then(routes::organization::add_organizations);
+        .and_then(routes::organization::add_organization);
 
     let routes = get_organization
         .or(update_organization)
