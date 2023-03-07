@@ -80,6 +80,33 @@ impl Store {
         }
     }
 
+
+    pub async fn get_organization_by_id(
+        &self,
+        organization_id: i32,
+    ) -> Result<Organization, Error> {
+        match sqlx::query(
+            "SELECT * FROM organizations WHERE id=$1"
+        )
+        .bind(organization_id)
+        .map(|row: PgRow| Organization {
+            id: OrganizationId(row.get("id")),
+            name: row.get("name"),
+            description: row.get("description"),
+            moderators: row.get("moderators"),
+            members: row.get("members"),
+        })
+        .fetch_one(&self.connection)
+        .await
+        {
+            Ok(organizations) => Ok(organizations),
+            Err(e) => {
+                tracing::event!(tracing::Level::ERROR, "{:?}", e);
+                Err(Error::DatabaseQueryError)
+            }
+        }
+    }
+
     pub async fn update_organization(
         &self,
         organization: Organization,

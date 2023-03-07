@@ -45,6 +45,13 @@ async fn main() {
             )
         }));
 
+    let get_organization_by_id = warp::get()
+        .and(warp::path("organizations"))
+        .and(warp::path::param::<i32>())
+        .and(warp::path::end())
+        .and(store_filter.clone())
+        .and_then(routes::organization::get_organization_by_id);
+
     let update_organization = warp::put()
         .and(warp::path("organizations"))
         .and(warp::path::param::<i32>())
@@ -68,6 +75,7 @@ async fn main() {
         .and_then(routes::organization::add_organization);
 
     let routes = get_organization
+        .or(get_organization_by_id)
         .or(update_organization)
         .or(add_organization)
         .or(delete_organization)

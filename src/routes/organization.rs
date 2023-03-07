@@ -30,6 +30,19 @@ pub async fn get_organizations(
     }
 }
 
+#[instrument]
+pub async fn get_organization_by_id(
+    id: i32,
+    store: Store,
+) -> Result<impl warp::Reply, warp::Rejection> {
+    event!(target: "practical_rust_book", Level::INFO, "querying get_organization_by_id");
+
+    match store.get_organization_by_id(id).await {
+        Ok(res) => Ok(warp::reply::json(&res)),
+        Err(e) => Err(warp::reject::custom(e)),
+    }
+}
+
 pub async fn update_organization(
     id: i32,
     store: Store,
