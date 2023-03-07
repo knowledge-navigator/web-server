@@ -47,7 +47,7 @@ async fn main() {
 
     let update_organization = warp::put()
         .and(warp::path("organizations"))
-        .and(warp::path::param::<String>())
+        .and(warp::path::param::<i32>())
         .and(warp::path::end())
         .and(store_filter.clone())
         .and(warp::body::json())
@@ -55,7 +55,7 @@ async fn main() {
 
     let delete_organization = warp::delete()
         .and(warp::path("organizations"))
-        .and(warp::path::param::<String>())
+        .and(warp::path::param::<i32>())
         .and(warp::path::end())
         .and(store_filter.clone())
         .and_then(routes::organization::delete_organization);

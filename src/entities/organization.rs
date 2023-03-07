@@ -22,4 +22,4 @@ pub struct Organization {
 }
 
 #[derive(Deserialize, Serialize, Debug, Clone, PartialEq, Eq, Hash)]
-pub struct OrganizationId(pub String);
+pub struct OrganizationId(pub i32);

@@ -34,7 +34,7 @@ pub async fn get_organizations(
 }
 
 pub async fn update_organization(
-    id: String,
+    id: i32,
     store: Store,
     organization: Organization,
 ) -> Result<impl warp::Reply, warp::Rejection> {
@@ -55,7 +55,7 @@ pub async fn update_organization(
 }
 
 pub async fn delete_organization(
-    id: String,
+    id: i32,
     store: Store,
 ) -> Result<impl warp::Reply, warp::Rejection> {
     match store
