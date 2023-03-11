@@ -19,4 +19,5 @@ sqlx = { version = "0.5", features = [
     "runtime-tokio-rustls",
     "migrate",
     "postgres",
+    "chrono"
 ] }

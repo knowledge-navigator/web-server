@@ -59,3 +59,4 @@ Certain 'groups' can be moderated if a teacher account has been added to the mod
 
 ## Database
 https://www.youtube.com/watch?v=Impf-Xm6oeA
+sudo service postgresql start

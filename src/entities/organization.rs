@@ -1,3 +1,4 @@
+use chrono::{DateTime, Utc};
 // time conversions for local take place on frontend
 use serde::{Deserialize, Serialize};
 
@@ -14,6 +15,7 @@ pub struct Organization {
     pub id: OrganizationId,
     pub name: String,
     pub description: Option<String>,
+    pub utc_created: DateTime<Utc>,
     pub moderators: Option<Vec<i32>>, // only UserType::Teacher
     pub members: Option<Vec<i32>>,
     // pub knowledge_nav: Option<Vec<KnowledgeNavId>>, // a knowledge navigator (e.g. Knowledge Navigator Y10)
@@ -26,6 +28,7 @@ pub struct OrganizationId(pub i32);
 pub struct NewOrganization {
     pub name: String,
     pub description: Option<String>,
+    pub utc_created: DateTime<Utc>,
     pub moderators: Option<Vec<i32>>, // only UserType::Teacher
     pub members: Option<Vec<i32>>,
 }

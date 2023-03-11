@@ -36,6 +36,7 @@ impl Store {
                 id: OrganizationId(row.get("id")),
                 name: row.get("name"),
                 description: row.get("description"),
+                utc_created: row.get("utc_created"),
                 moderators: row.get("moderators"),
                 members: row.get("members"),
             })
@@ -49,23 +50,25 @@ impl Store {
             }
         }
     }
-    pub async fn add_organization(
+    pub async fn add_organization(  
         &self,
         new_organization: NewOrganization,
     ) -> Result<Organization, Error> {
         match sqlx::query(
-            "INSERT INTO organizations (name, description, moderators, members)
-                 VALUES ($1, $2, $3, $4)
-                 RETURNING id, name, description, moderators, members",
+            "INSERT INTO organizations (name, description, utc_created, moderators, members)
+                 VALUES ($1, $2, $3, $4, $5)
+                 RETURNING id, name, description, utc_created, moderators, members",
         )
         .bind(new_organization.name)
         .bind(new_organization.description)
+        .bind(new_organization.utc_created)
         .bind(new_organization.moderators)
         .bind(new_organization.members)
         .map(|row: PgRow| Organization {
             id: OrganizationId(row.get("id")),
             name: row.get("name"),
             description: row.get("description"),
+            utc_created: row.get("utc_created"),
             moderators: row.get("moderators"),
             members: row.get("members"),
         })
@@ -80,24 +83,22 @@ impl Store {
         }
     }
 
-
     pub async fn get_organization_by_id(
         &self,
         organization_id: i32,
     ) -> Result<Organization, Error> {
-        match sqlx::query(
-            "SELECT * FROM organizations WHERE id=$1"
-        )
-        .bind(organization_id)
-        .map(|row: PgRow| Organization {
-            id: OrganizationId(row.get("id")),
-            name: row.get("name"),
-            description: row.get("description"),
-            moderators: row.get("moderators"),
-            members: row.get("members"),
-        })
-        .fetch_one(&self.connection)
-        .await
+        match sqlx::query("SELECT * FROM organizations WHERE id=$1")
+            .bind(organization_id)
+            .map(|row: PgRow| Organization {
+                id: OrganizationId(row.get("id")),
+                name: row.get("name"),
+                description: row.get("description"),
+                utc_created: row.get("utc_created"),
+                moderators: row.get("moderators"),
+                members: row.get("members"),
+            })
+            .fetch_one(&self.connection)
+            .await
         {
             Ok(organizations) => Ok(organizations),
             Err(e) => {
@@ -113,12 +114,13 @@ impl Store {
         organization_id: i32,
     ) -> Result<Organization, Error> {
         match sqlx::query(
-            "UPDATE organizations SET name = $1, description = $2, moderators = $3, members = $4
-        WHERE id = $5
-        RETURNING id, name, description, moderators, members",
+            "UPDATE organizations SET name = $1, description = $2, utc_created = $3, moderators = $4, members = $5
+        WHERE id = $6
+        RETURNING id, name, description, utc_created, moderators, members",
         )
         .bind(organization.name)
         .bind(organization.description)
+        .bind(organization.utc_created)
         .bind(organization.moderators)
         .bind(organization.members)
         .bind(organization_id)
@@ -126,6 +128,7 @@ impl Store {
             id: OrganizationId(row.get("id")),
             name: row.get("name"),
             description: row.get("description"),
+            utc_created: row.get("utc_created"),
             moderators: row.get("moderators"),
             members: row.get("members"),
         })

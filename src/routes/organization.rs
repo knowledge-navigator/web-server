@@ -3,6 +3,7 @@ use crate::entities::pagination::extract_pagination;
 use crate::entities::pagination::Pagination;
 use std::collections::HashMap;
 
+use chrono::Utc;
 use tracing::{event, instrument, Level};
 use warp::hyper::StatusCode;
 
@@ -13,7 +14,7 @@ pub async fn get_organizations(
     params: HashMap<String, String>,
     store: Store,
 ) -> Result<impl warp::Reply, warp::Rejection> {
-    event!(target: "practical_rust_book", Level::INFO, "querying orget_organizations");
+    event!(target: "knowledge_nav_web_server_api", Level::INFO, "querying orget_organizations");
     let mut pagination = Pagination::default();
 
     if !params.is_empty() {
@@ -35,7 +36,7 @@ pub async fn get_organization_by_id(
     id: i32,
     store: Store,
 ) -> Result<impl warp::Reply, warp::Rejection> {
-    event!(target: "practical_rust_book", Level::INFO, "querying get_organization_by_id");
+    event!(target: "knowledge_nav_web_server_api", Level::INFO, "querying get_organization_by_id");
 
     match store.get_organization_by_id(id).await {
         Ok(res) => Ok(warp::reply::json(&res)),
@@ -69,8 +70,9 @@ pub async fn delete_organization(
 
 pub async fn add_organization(
     store: Store,
-    new_organization: NewOrganization,
+    mut new_organization: NewOrganization,
 ) -> Result<impl warp::Reply, warp::Rejection> {
+    new_organization.utc_created = Utc::now(); // generate current DateTime<Utc>
     match store.add_organization(new_organization).await {
         Ok(_) => Ok(warp::reply::with_status(
             "organization added",
