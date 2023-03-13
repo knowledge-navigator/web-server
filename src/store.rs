@@ -38,6 +38,7 @@ impl Store {
                 name: row.get("name"),
                 description: row.get("description"),
                 utc_created: row.get("utc_created"),
+                utc_last_updated: row.get("utc_last_updated"),
                 moderators: row.get("moderators"),
                 members: row.get("members"),
             })
@@ -55,14 +56,16 @@ impl Store {
         &self,
         new_organization: NewOrganization,
     ) -> Result<Organization, Error> {
+        let utc_now = Utc::now();
         match sqlx::query(
-            "INSERT INTO organizations (name, description, utc_created, moderators, members)
-                 VALUES ($1, $2, $3, $4, $5)
-                 RETURNING id, name, description, utc_created, moderators, members",
+            "INSERT INTO organizations (name, description, utc_created, utc_last_updated, moderators, members)
+                 VALUES ($1, $2, $3, $4, $5, $6)
+                 RETURNING id, name, description, utc_created, utc_last_updated, moderators, members",
         )
         .bind(new_organization.name)
         .bind(new_organization.description)
-        .bind(Utc::now())
+        .bind(&utc_now)
+        .bind(&utc_now)
         .bind(new_organization.moderators)
         .bind(new_organization.members)
         .map(|row: PgRow| Organization {
@@ -70,6 +73,7 @@ impl Store {
             name: row.get("name"),
             description: row.get("description"),
             utc_created: row.get("utc_created"),
+            utc_last_updated: row.get("utc_last_updated"),
             moderators: row.get("moderators"),
             members: row.get("members"),
         })
@@ -95,6 +99,7 @@ impl Store {
                 name: row.get("name"),
                 description: row.get("description"),
                 utc_created: row.get("utc_created"),
+                utc_last_updated: row.get("utc_last_updated"),
                 moderators: row.get("moderators"),
                 members: row.get("members"),
             })
@@ -115,13 +120,14 @@ impl Store {
         organization_id: i32,
     ) -> Result<Organization, Error> {
         match sqlx::query(
-            "UPDATE organizations SET name = $1, description = $2, utc_created = $3, moderators = $4, members = $5
-        WHERE id = $6
-        RETURNING id, name, description, utc_created, moderators, members",
+            "UPDATE organizations SET name = $1, description = $2, utc_created = $3, utc_last_updated = $4, moderators = $5, members = $6
+        WHERE id = $7
+        RETURNING id, name, description, utc_created, utc_last_updated, moderators, members",
         )
         .bind(organization.name)
         .bind(organization.description)
         .bind(organization.utc_created)
+        .bind(Utc::now())
         .bind(organization.moderators)
         .bind(organization.members)
         .bind(organization_id)
@@ -130,6 +136,7 @@ impl Store {
             name: row.get("name"),
             description: row.get("description"),
             utc_created: row.get("utc_created"),
+            utc_last_updated: row.get("utc_last_updated"),
             moderators: row.get("moderators"),
             members: row.get("members"),
         })
@@ -143,7 +150,6 @@ impl Store {
             }
         }
     }
-
     pub async fn delete_organization(&self, organization_id: i32) -> Result<bool, Error> {
         match sqlx::query("DELETE FROM organizations WHERE id = $1")
             .bind(organization_id)

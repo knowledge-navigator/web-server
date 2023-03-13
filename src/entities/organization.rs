@@ -16,9 +16,9 @@ pub struct Organization {
     pub name: String,
     pub description: Option<String>,
     pub utc_created: DateTime<Utc>,
+    pub utc_last_updated: DateTime<Utc>,
     pub moderators: Option<Vec<i32>>, // only UserType::Teacher
     pub members: Option<Vec<i32>>,
-    // pub knowledge_nav: Option<Vec<KnowledgeNavId>>, // a knowledge navigator (e.g. Knowledge Navigator Y10)
 }
 
 #[derive(Deserialize, Serialize, Debug, Clone, PartialEq, Eq, Hash)]
