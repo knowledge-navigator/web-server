@@ -3,7 +3,6 @@ use crate::entities::pagination::extract_pagination;
 use crate::entities::pagination::Pagination;
 use std::collections::HashMap;
 
-use chrono::Utc;
 use tracing::{event, instrument, Level};
 use warp::hyper::StatusCode;
 
@@ -70,9 +69,8 @@ pub async fn delete_organization(
 
 pub async fn add_organization(
     store: Store,
-    mut new_organization: NewOrganization,
+    new_organization: NewOrganization,
 ) -> Result<impl warp::Reply, warp::Rejection> {
-    new_organization.utc_created = Utc::now(); // generate current DateTime<Utc>
     match store.add_organization(new_organization).await {
         Ok(_) => Ok(warp::reply::with_status(
             "organization added",

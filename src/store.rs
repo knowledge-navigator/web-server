@@ -1,4 +1,5 @@
 use crate::entities::organization::{NewOrganization, Organization, OrganizationId};
+use chrono::Utc;
 use handle_errors::Error;
 use sqlx::postgres::{PgPool, PgPoolOptions, PgRow};
 use sqlx::Row;
@@ -61,7 +62,7 @@ impl Store {
         )
         .bind(new_organization.name)
         .bind(new_organization.description)
-        .bind(new_organization.utc_created)
+        .bind(Utc::now())
         .bind(new_organization.moderators)
         .bind(new_organization.members)
         .map(|row: PgRow| Organization {

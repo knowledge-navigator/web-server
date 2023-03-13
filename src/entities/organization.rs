@@ -28,7 +28,6 @@ pub struct OrganizationId(pub i32);
 pub struct NewOrganization {
     pub name: String,
     pub description: Option<String>,
-    pub utc_created: DateTime<Utc>,
     pub moderators: Option<Vec<i32>>, // only UserType::Teacher
     pub members: Option<Vec<i32>>,
 }
