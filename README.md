@@ -60,4 +60,4 @@ Certain 'groups' can be moderated if a teacher account has been added to the mod
 ## Database
 https://www.youtube.com/watch?v=Impf-Xm6oeA
 `sudo service postgresql start`
-`sqlx migrate run --database-url postgres://postgres:7727@localhost:5432/webserver`
+`sqlx migrate run --database-url postgres://postgres:[token]@localhost:5432/webserver`
