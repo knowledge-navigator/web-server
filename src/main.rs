@@ -13,7 +13,9 @@ async fn main() {
     let log_filter = std::env::var("RUST_LOG")
         .unwrap_or_else(|_| "knowledge_nav_web_server_api=info,warp=error".to_owned());
 
-    let store = store::Store::new("postgres://postgres:7727@localhost:5432/webserver").await; // TODO: LOCAL KEY, REMOVE IN PRODUCTION
+    let login = std::env::var("USER_PASS_POSTGRESDB").unwrap_or_else(|_| "knowledge_nav_web_server_api=info,warp=error".to_owned());
+    let db_connection = format!("postgres://{}@localhost:5432/webserver", &login);
+    let store = store::Store::new(&db_connection).await; // TODO: LOCAL KEY, REMOVE IN PRODUCTION
 
     sqlx::migrate!()
         .run(&store.clone().connection)
