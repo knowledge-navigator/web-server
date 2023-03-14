@@ -13,7 +13,7 @@ async fn main() {
     let log_filter = std::env::var("RUST_LOG")
         .unwrap_or_else(|_| "knowledge_nav_web_server_api=info,warp=error".to_owned());
 
-    let store = store::Store::new("postgres://postgres:7727@localhost:5432/webserver").await;
+    let store = store::Store::new("postgres://postgres:7727@localhost:5432/webserver").await; // TODO: LOCAL KEY, REMOVE IN PRODUCTION
 
     sqlx::migrate!()
         .run(&store.clone().connection)
