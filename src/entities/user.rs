@@ -10,7 +10,7 @@ pub struct User {
 }
 
 #[derive(Deserialize, Serialize, Debug, Clone, PartialEq, Eq, Hash)]
-pub struct UserId(pub String);
+pub struct UserId(pub i32);
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
 pub enum UserType {

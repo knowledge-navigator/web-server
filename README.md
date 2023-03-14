@@ -57,25 +57,7 @@ Certain 'groups' can be moderated if a teacher account has been added to the mod
     - moderators
     - info chunks
 
-## Logging
-You can set `env` variables in PowerShell with the following command:
-```powershell
-Set-Item -Path Env:RUST_LOG -Value ($Env:RUST_LOG + "info")
-```
-
-You can verify if it saved the `env` variable with the following command:
-```bash
-dir env:
-```
-
-If you wish to change the logging level after creating an `env` variable, issue the following command:
-```powershell
-Set-Item -Path env:RUST_LOG -Value "debug"
-```
-
-This will allow you to select the level of logging you would like.
-
-To send all logs to a dedicated file in the repo, use the following command:
-```bash
-cargo run 2>logs.txt
-```
+## Database
+https://www.youtube.com/watch?v=Impf-Xm6oeA
+`sudo service postgresql start`
+`sqlx migrate run --database-url postgres://postgres:7727@localhost:5432/webserver`

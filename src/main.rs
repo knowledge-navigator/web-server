@@ -13,7 +13,13 @@ async fn main() {
     let log_filter = std::env::var("RUST_LOG")
         .unwrap_or_else(|_| "knowledge_nav_web_server_api=info,warp=error".to_owned());
 
-    let store = store::Store::new();
+    let store = store::Store::new("postgres://postgres:7727@localhost:5432/webserver").await;
+
+    sqlx::migrate!()
+        .run(&store.clone().connection)
+        .await
+        .expect("Cannot run migration");
+
     let store_filter = warp::any().map(move || store.clone());
 
     tracing_subscriber::fmt()
@@ -45,9 +51,16 @@ async fn main() {
             )
         }));
 
+    let get_organization_by_id = warp::get()
+        .and(warp::path("organizations"))
+        .and(warp::path::param::<i32>())
+        .and(warp::path::end())
+        .and(store_filter.clone())
+        .and_then(routes::organization::get_organization_by_id);
+
     let update_organization = warp::put()
         .and(warp::path("organizations"))
-        .and(warp::path::param::<String>())
+        .and(warp::path::param::<i32>())
         .and(warp::path::end())
         .and(store_filter.clone())
         .and(warp::body::json())
@@ -55,7 +68,7 @@ async fn main() {
 
     let delete_organization = warp::delete()
         .and(warp::path("organizations"))
-        .and(warp::path::param::<String>())
+        .and(warp::path::param::<i32>())
         .and(warp::path::end())
         .and(store_filter.clone())
         .and_then(routes::organization::delete_organization);
@@ -65,9 +78,10 @@ async fn main() {
         .and(warp::path::end())
         .and(store_filter.clone())
         .and(warp::body::json())
-        .and_then(routes::organization::add_organizations);
+        .and_then(routes::organization::add_organization);
 
     let routes = get_organization
+        .or(get_organization_by_id)
         .or(update_organization)
         .or(add_organization)
         .or(delete_organization)
