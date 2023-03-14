@@ -14,7 +14,7 @@ teacher to and from moderator status.
 pub struct Organization {
     pub id: OrganizationId,
     pub name: String,
-    pub description: Option<String>,
+    pub description: String,
     pub utc_created: DateTime<Utc>,
     pub utc_last_updated: DateTime<Utc>,
     pub moderators: Option<Vec<i32>>, // only UserType::Teacher
@@ -27,7 +27,13 @@ pub struct OrganizationId(pub i32);
 #[derive(Deserialize, Serialize, Debug, Clone)]
 pub struct NewOrganization {
     pub name: String,
-    pub description: Option<String>,
+    pub description: String,
     pub moderators: Option<Vec<i32>>, // only UserType::Teacher
     pub members: Option<Vec<i32>>,
 }
+
+// #[derive(Debug)]
+// pub enum Discriminant<'a> {
+//     Filled(Result<String, handle_errors::Error>),
+//     Empty(&'a str)
+// }

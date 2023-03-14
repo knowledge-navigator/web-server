@@ -1,12 +1,11 @@
 use crate::entities::organization::{NewOrganization, Organization};
 use crate::entities::pagination::extract_pagination;
 use crate::entities::pagination::Pagination;
-use std::collections::HashMap;
-
-use tracing::{event, instrument, Level};
-use warp::hyper::StatusCode;
-
+use crate::profanity::check_profanity;
 use crate::store::Store;
+use std::collections::HashMap;
+use tracing::{event, instrument, Level};
+use warp::http::StatusCode;
 
 #[instrument]
 pub async fn get_organizations(
@@ -48,6 +47,29 @@ pub async fn update_organization(
     store: Store,
     organization: Organization,
 ) -> Result<impl warp::Reply, warp::Rejection> {
+    let name = check_profanity(organization.name);
+    let description = check_profanity(organization.description);
+
+    let (name, description) = tokio::join!(name, description);
+
+    if name.is_err() {
+        return Err(warp::reject::custom(name.unwrap_err()));
+    }
+
+    if description.is_err() {
+        return Err(warp::reject::custom(description.unwrap_err()));
+    }
+
+    let organization = Organization {
+        id: organization.id,
+        name: name.unwrap(),
+        description: description.unwrap(),
+        utc_created: organization.utc_created,
+        utc_last_updated: organization.utc_last_updated,
+        moderators: organization.moderators,
+        members: organization.members,
+    };
+
     match store.update_organization(organization, id).await {
         Ok(res) => Ok(warp::reply::json(&res)),
         Err(e) => Err(warp::reject::custom(e)),
@@ -71,7 +93,24 @@ pub async fn add_organization(
     store: Store,
     new_organization: NewOrganization,
 ) -> Result<impl warp::Reply, warp::Rejection> {
-    match store.add_organization(new_organization).await {
+    let name = match check_profanity(new_organization.name).await {
+        Ok(res) => res,
+        Err(e) => return Err(warp::reject::custom(e)),
+    };
+
+    let description = match check_profanity(new_organization.description).await {
+        Ok(res) => res,
+        Err(e) => return Err(warp::reject::custom(e)),
+    };
+
+    let organization = NewOrganization {
+        name,
+        description,
+        moderators: new_organization.moderators,
+        members: new_organization.members,
+    };
+
+    match store.add_organization(organization).await {
         Ok(_) => Ok(warp::reply::with_status(
             "organization added",
             StatusCode::OK,
